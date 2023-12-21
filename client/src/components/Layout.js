@@ -10,6 +10,7 @@ function Layout({ children }) {
 
   const navigate = useNavigate();
   const location = useLocation();
+
   const userMenu = [
     {
       name: "Home",
@@ -25,7 +26,12 @@ function Layout({ children }) {
       name: "Apply Doctor",
       path: "/apply-doctor",
       icon: "ri-hospital-line",
-    }
+    },
+    {
+      name: "Pharmacy",
+      path: "/pharmacy",
+      icon: "ri-file-list-line",
+    },
   ];
 
   const doctorMenu = [
@@ -43,6 +49,11 @@ function Layout({ children }) {
       name: "Profile",
       path: `/doctor/profile/${user?._id}`,
       icon: "ri-user-line",
+    },
+    {
+      name: "Pharmacy",
+      path: "/pharmacy",
+      icon: "ri-file-list-line",
     },
   ];
 
@@ -67,10 +78,20 @@ function Layout({ children }) {
       path: "/profile",
       icon: "ri-user-line",
     },
+    {
+      name: "Pharmacy",
+      path: "/pharmacy",
+      icon: "ri-file-list-line",
+    },
   ];
 
-  const menuToBeRendered = user?.isAdmin ? adminMenu : user?.isDoctor ? doctorMenu : userMenu;
+  const menuToBeRendered = user?.isAdmin
+    ? adminMenu
+    : user?.isDoctor
+    ? doctorMenu
+    : userMenu;
   const role = user?.isAdmin ? "Admin" : user?.isDoctor ? "Doctor" : "User";
+
   return (
     <div className="main">
       <div className="d-flex layout">
@@ -79,21 +100,26 @@ function Layout({ children }) {
             <h1 className="logo">SH</h1>
             <h1 className="role">{role}</h1>
           </div>
-
+  
           <div className="menu">
             {menuToBeRendered.map((menu) => {
               const isActive = location.pathname === menu.path;
               return (
                 <div
+                  key={menu.path}
                   className={`d-flex menu-item ${
                     isActive && "active-menu-item"
                   }`}
+                  onClick={() => {
+                    navigate(menu.path); // Always navigate to the path specified in the menu
+                  }}
                 >
                   <i className={menu.icon}></i>
                   {!collapsed && <Link to={menu.path}>{menu.name}</Link>}
                 </div>
               );
             })}
+  
             <div
               className={`d-flex menu-item `}
               onClick={() => {
@@ -106,7 +132,7 @@ function Layout({ children }) {
             </div>
           </div>
         </div>
-
+  
         <div className="content">
           <div className="header">
             {collapsed ? (
@@ -120,7 +146,7 @@ function Layout({ children }) {
                 onClick={() => setCollapsed(true)}
               ></i>
             )}
-
+  
             <div className="d-flex align-items-center px-4">
               <Badge
                 count={user?.unseenNotifications.length}
@@ -128,13 +154,13 @@ function Layout({ children }) {
               >
                 <i className="ri-notification-line header-action-icon px-3"></i>
               </Badge>
-
+  
               <Link className="anchor mx-2" to="/profile">
                 {user?.name}
               </Link>
             </div>
           </div>
-
+  
           <div className="body">{children}</div>
         </div>
       </div>

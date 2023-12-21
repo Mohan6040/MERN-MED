@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { Button } from "antd";
+// import { Button } from "antd";
 import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home";
 import { useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import Profile from "./pages/Doctor/Profile";
 import BookAppointment from "./pages/BookAppointment";
 import Appointments from "./pages/Appointments";
 import DoctorAppointments from "./pages/Doctor/DoctorAppointments";
+import Pharmacy from "./pages/Pharmacy";
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -23,7 +24,7 @@ function App() {
     <BrowserRouter>
       {loading && (
         <div className="spinner-parent">
-          <div class="spinner-border" role="status"></div>
+          <div className="spinner-border" role="status"></div>
         </div>
       )}
       <Toaster position="top-center" reverseOrder={false} />
@@ -44,6 +45,15 @@ function App() {
             </PublicRoute>
           }
         />
+        <Route
+          path="/pharmacy"
+          element={
+            <ProtectedRoute>
+            <Pharmacy />
+          </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/"
           element={

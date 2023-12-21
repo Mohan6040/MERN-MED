@@ -1,5 +1,5 @@
-import { Button, Col, Form, Input, Row, TimePicker } from "antd";
 import React, { useEffect, useState } from "react";
+import { Row, Col, Card, Form, Input, Button, TimePicker, Space } from "antd";
 import Layout from "../../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import { showLoading, hideLoading } from "../../redux/alertsSlice";
@@ -9,12 +9,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import DoctorForm from "../../components/DoctorForm";
 import moment from "moment";
 
+const { Item } = Form;
+
 function Profile() {
   const { user } = useSelector((state) => state.user);
   const params = useParams();
   const [doctor, setDoctor] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const onFinish = async (values) => {
     try {
       dispatch(showLoading());
@@ -67,7 +70,7 @@ function Profile() {
         setDoctor(response.data.data);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       dispatch(hideLoading());
     }
   };
@@ -75,11 +78,43 @@ function Profile() {
   useEffect(() => {
     getDoctorData();
   }, []);
+
   return (
     <Layout>
-      <h1 className="page-title">Doctor Profile</h1>
-      <hr />
-      {doctor && <DoctorForm onFinish={onFinish} initivalValues={doctor} />}
+      <Row justify="space-between" align="middle">
+        <Col span={24}>
+          <h1 className="page-title">Doctor Profile</h1>
+          <hr />
+        </Col>
+      </Row>
+
+      <Row justify="center">
+        <Col xs={24} sm={24} md={18} lg={16} xl={14}>
+          {doctor ? (
+            <Card title="Profile Information" style={{ marginBottom: "20px" }}>
+              <DoctorForm onFinish={onFinish} initialValues={doctor} />
+
+              {/* Additional Profile Information */}
+              <h2 style={{ marginTop: "20px" }}>Additional Information</h2>
+              <Form layout="vertical">
+                <Item label="Specialization" name="specialization">
+                  <Input />
+                </Item>
+
+                {/* Add more fields as needed */}
+
+                <Item>
+                  <Button type="primary" htmlType="submit">
+                    Save Changes
+                  </Button>
+                </Item>
+              </Form>
+            </Card>
+          ) : (
+            <p>Loading...</p>
+          )}
+        </Col>
+      </Row>
     </Layout>
   );
 }
