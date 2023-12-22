@@ -1,4 +1,3 @@
-// Pharmacy.js
 import React, { useState } from "react";
 import { Button, Form, Input, Card, List, Modal } from "antd";
 import Layout from "../components/Layout";
