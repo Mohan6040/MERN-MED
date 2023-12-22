@@ -49,8 +49,17 @@ function App() {
           path="/pharmacy"
           element={
             <ProtectedRoute>
-            <Pharmacy />
-          </ProtectedRoute>
+              <Pharmacy />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
           }
         />
 

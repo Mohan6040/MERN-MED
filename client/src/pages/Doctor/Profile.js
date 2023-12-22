@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Card, Form, Input, Button, TimePicker, Space } from "antd";
+import { Row, Col, Card, Form, Input, Button} from "antd";
 import Layout from "../../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import { showLoading, hideLoading } from "../../redux/alertsSlice";
@@ -8,6 +8,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import DoctorForm from "../../components/DoctorForm";
 import moment from "moment";
+import UserProfileForm from "../../components/UserProfile";
 
 const { Item } = Form;
 
@@ -53,55 +54,76 @@ function Profile() {
   const getDoctorData = async () => {
     try {
       dispatch(showLoading());
-      const response = await axios.post(
-        "/api/doctor/get-doctor-info-by-user-id",
-        {
-          userId: params.userId,
+  
+      // Fetch user details
+      const userResponse = await axios.get(`/api/user/${params.userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      dispatch(hideLoading());
-      if (response.data.success) {
-        setDoctor(response.data.data);
+      });
+      // Fetch doctor details
+    const doctorResponse = await axios.post(
+      "/api/doctor/get-doctor-info-by-user-id",
+      {
+        userId: params.userId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       }
-    } catch (error) {
-      console.error(error);
-      dispatch(hideLoading());
+    );
+
+    dispatch(hideLoading());
+
+    if (userResponse.data.success && doctorResponse.data.success) {
+      const userData = userResponse.data.data;
+      const doctorData = doctorResponse.data.data;
+
+      // Combine user and doctor data
+      const combinedData = {
+        username: userData.username,
+        // Add more user details as needed
+        doctorDetails: doctorData,
+      };
+
+      setDoctor(combinedData);
     }
-  };
+  } catch (error) {
+    console.error(error);
+    dispatch(hideLoading());
+  }
+};
 
   useEffect(() => {
     getDoctorData();
+    
   }, []);
-
+  
   return (
     <Layout>
       <Row justify="space-between" align="middle">
         <Col span={24}>
-          <h1 className="page-title">Doctor Profile</h1>
+          <h1 className="page-title"> Profile</h1>
           <hr />
         </Col>
       </Row>
 
       <Row justify="center">
         <Col xs={24} sm={24} md={18} lg={16} xl={14}>
-          {doctor ? (
+          {user ? (
             <Card title="Profile Information" style={{ marginBottom: "20px" }}>
               <DoctorForm onFinish={onFinish} initialValues={doctor} />
-
+              {/* <div>
+      <h1>User Profile</h1>
+      <UserProfileForm />
+    </div> */}
               {/* Additional Profile Information */}
               <h2 style={{ marginTop: "20px" }}>Additional Information</h2>
               <Form layout="vertical">
                 <Item label="Specialization" name="specialization">
                   <Input />
                 </Item>
-
-                {/* Add more fields as needed */}
 
                 <Item>
                   <Button type="primary" htmlType="submit">

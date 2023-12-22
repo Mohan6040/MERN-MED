@@ -11,6 +11,7 @@ const Pharmacy = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
+  const [selectedMedicineId, setSelectedMedicineId] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -19,7 +20,7 @@ const Pharmacy = () => {
     {
       id: 1,
       name: "Paracetamol",
-      description: "For pain and fever relief",
+      description: "For pain and fever relief and many more",
       price: "₹5.00",
       manufacturer: "ABC Pharmaceuticals",
       dosage: "500mg",
@@ -405,11 +406,15 @@ const Pharmacy = () => {
             Add Medicine
           </Button>
 
-          <List
-            grid={{ gutter: 16, column: 3 }}
+          <List 
+            grid={{ gutter: 45, column: 3 }}
             dataSource={filteredMedicines}
             renderItem={(medicine) => (
-              <List.Item style={{ marginBottom: "16px" }}>
+              <List.Item style={{ marginBottom: "45px",transform: selectedMedicineId === medicine.id ? "scale(1.1)" : "scale(1)",
+              // Apply other hover effects or styles as needed
+              transition: "transform 0.3s ease-in-out",
+              hover: "hover" }}
+              onClick={() => setSelectedMedicineId(medicine.id)}>
                 <Card
                   title={medicine.name}
                   extra={medicine.price}
@@ -424,7 +429,7 @@ const Pharmacy = () => {
                       }}
                     />
                   }
-                  style={{ width: "100%" }}
+                  style={{ width: "100%",backgroundColor:"skyblue",borderRadius:'15px',boxShadow:"1px 1px 4px black"}}
                 >
                   <p style={{ marginBottom: "8px" }}>
                     Description: {medicine.description}
@@ -439,6 +444,7 @@ const Pharmacy = () => {
                   <Button
                     type="link"
                     onClick={() => openEditMedicineModal(medicine)}
+              
                   >
                     Edit
                   </Button>
