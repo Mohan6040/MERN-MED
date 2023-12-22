@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema(
+const pharmacistSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema(
     },
     isPharmacist: {
       type: Boolean,
-      default: false, // Assuming pharmacists are the primary users of this model
+      default: true, // Assuming pharmacists are the primary users of this model
     },
     isDoctor: {
       type: Boolean,
@@ -40,6 +40,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const userModel = mongoose.model("users", userSchema);
+const pharmacistModel = mongoose.model("pharmacists", pharmacistSchema);
 
-module.exports = userModel;
+module.exports = pharmacistModel;

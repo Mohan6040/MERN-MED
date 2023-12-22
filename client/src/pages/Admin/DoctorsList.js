@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Layout from "../../components/Layout";
 import { showLoading, hideLoading } from "../../redux/alertsSlice";
-import {toast} from 'react-hot-toast'
+import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Table } from "antd";
 import moment from "moment";
@@ -10,29 +10,36 @@ import moment from "moment";
 function DoctorsList() {
   const [doctors, setDoctors] = useState([]);
   const dispatch = useDispatch();
+
   const getDoctorsData = async () => {
     try {
       dispatch(showLoading());
-      const resposne = await axios.get("/api/admin/get-all-doctors", {
+      const response = await axios.get("/api/admin/get-all-doctors", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       dispatch(hideLoading());
-      if (resposne.data.success) {
-        setDoctors(resposne.data.data);
+
+      if (response.data.success) {
+        setDoctors(response.data.data);
       }
     } catch (error) {
       dispatch(hideLoading());
+      toast.error("Error fetching doctors data");
     }
   };
 
   const changeDoctorStatus = async (record, status) => {
     try {
       dispatch(showLoading());
-      const resposne = await axios.post(
+      const response = await axios.post(
         "/api/admin/change-doctor-account-status",
-        { doctorId: record._id, userId: record.userId, status: status },
+        {
+          doctorId: record._id,
+          userId: record.userId,
+          status: status,
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -40,18 +47,23 @@ function DoctorsList() {
         }
       );
       dispatch(hideLoading());
-      if (resposne.data.success) {
-        toast.success(resposne.data.message);
+
+      if (response.data.success) {
+        toast.success(response.data.message);
         getDoctorsData();
+      } else {
+        toast.error(response.data.message || "Error changing doctor account status");
       }
     } catch (error) {
-      toast.error('Error changing doctor account status');
+      toast.error("Error changing doctor account status");
       dispatch(hideLoading());
     }
   };
+
   useEffect(() => {
     getDoctorsData();
   }, []);
+
   const columns = [
     {
       title: "Name",
@@ -69,10 +81,11 @@ function DoctorsList() {
     {
       title: "Created At",
       dataIndex: "createdAt",
-      render: (record , text) => moment(record.createdAt).format("DD-MM-YYYY"),
+      render: (text, record) =>
+        moment(record.createdAt).format("DD-MM-YYYY"),
     },
     {
-      title: "status",
+      title: "Status",
       dataIndex: "status",
     },
     {
@@ -100,6 +113,7 @@ function DoctorsList() {
       ),
     },
   ];
+
   return (
     <Layout>
       <h1 className="page-header">Doctors List</h1>

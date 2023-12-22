@@ -69,8 +69,9 @@ label{
   border-radius: 0 !important;
 }
 .primary-button{
-  background-color: #005555 !important;
-  border-color: #005555 !important;
+  
+  background-color: #0077b6 !important;
+  border-color: #005583 !important;
   height: 40px !important;
   width: 100% !important;
   color: white !important;
@@ -108,7 +109,7 @@ p{
    display: flex;
    align-items: center;
    justify-content: center;
-   background-color: #005555;
+   background-color: #0077b6;
 }
 .authentication-form{
   width: 400px;

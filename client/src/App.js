@@ -17,6 +17,7 @@ import BookAppointment from "./pages/BookAppointment";
 import Appointments from "./pages/Appointments";
 import DoctorAppointments from "./pages/Doctor/DoctorAppointments";
 import Pharmacy from "./pages/Pharmacy";
+import Orders from "./pages/Orders";
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -38,6 +39,14 @@ function App() {
           }
         />
         <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/register"
           element={
             <PublicRoute>
@@ -49,8 +58,16 @@ function App() {
           path="/pharmacy"
           element={
             <ProtectedRoute>
-            <Pharmacy />
-          </ProtectedRoute>
+              <Pharmacy />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
           }
         />
 
